@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}
+    注册
+{% endblock %}
+{% block content %}
+<div class="flex-center">
+    <div class="container">
+        <div class="flex-center">
+            <div class="unit-1-2 unit-1-on-mobile">
+                <h3>注册</h3>
+                <form class="form" action="{% url 'users:register' %}" method="post">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <nobr>{{ field.label_tag }}
+                        {{ field }}</nobr>
+                        {{ field.errors }}
+                        {% if field.help_text %}
+                            <p class="help text-small text-muted">{{ field.help_text|safe }}</p>
+                        {% endif %}
+                    {% endfor %}
+                    <button type="submit" class="btn btn-primary btn-block">注册</button>
+                    <input type="hidden" name="next" value="{{ next }}"/>
+                </form>
+                <div class="flex-center top-gap text-small">
+                    <a href="/users/login">已有账号登录</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

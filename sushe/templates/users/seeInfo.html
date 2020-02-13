@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% block title %}
+    查看个人信息
+{% endblock %}
+{% block content %}
+<div class="flex-center">
+    <div class="container">
+        <div class="flex-center">
+            <div class="unit-1-2 unit-1-on-mobile">
+                <h1><a href="{% url 'index' %}">返回首页</a></h1>
+                <h3>个人信息查询</h3>
+                <h5>姓名：{{ user.username }}</h5>
+                <h5>email：{{ user.email }}</h5>
+                <h5>电话：{{ perfectInfo.phone }}</h5>
+                <h5>学校：{{ perfectInfo.school }}</h5>
+                <h5>工号：{{ perfectInfo.gonghao }}</h5>
+                <h5>宿舍：{{ perfectInfo.sushe }}</h5>
+                <h5></h5>
+            </div>
+        </div>
+    </div>s
+</div>
+{% endblock %}

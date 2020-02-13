@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}
+    完善个人信息
+{% endblock %}
+{% block content %}
+<div class="flex-center">
+    <div class="container">
+        <div class="flex-center">
+            <div class="unit-1-2 unit-1-on-mobile">
+                <h3>完善个人信息</h3>
+                <form class="form" action="{% url 'users:perfectInfo' %}" method="post">
+                    {% csrf_token %}
+                    <label for="username">用户名：<h5>{{ user.username }}</h5></label>
+                    <input type="hidden" name="username" value="{{ user.id }}" />
+                    {% for field in form %}
+                        {% if field.name == 'username' or field.name == 'is_perfect' %}
+
+                        {% else %}
+                            {{ field.label_tag }}
+                            {{ field }}
+                            {{ field.errors }}
+                            {% if field.help_text %}
+                                <p class="help text-small text-muted">{{ field.help_text|safe }}</p>
+                            {% endif %}
+                        {% endif %}
+                    {% endfor %}
+                    <input type="hidden" name="is_perfect" value=1 />
+                    <button type="submit" class="btn btn-primary btn-block">确定</button>
+                    <input type="hidden" name="next" value="{{ next }}"/>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
