@@ -37,9 +37,14 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'users',
+    # 'users',
+    'users.apps.UsersConfig',
     # 电话相关
-    'phonenumber_field'
+    'phonenumber_field',
+    # 'blog'
+    'blog.apps.BlogConfig',  # 注册 blog 应用，因为在BlogConfig类中对blog应用做了配置，为了使admin汉化，需要再加上它
+    # 'markdown',
+
 ]
 
 MIDDLEWARE = [
@@ -84,6 +89,7 @@ DATABASES = {
         'PASSWORD':'syh315923418',
         'HOST': '127.0.0.1',
         'PORT': '3306',
+        # 'OPTIONS': {'charset': 'utf8mb4'}, # 数据库保存表情
     }
 }
 
@@ -129,6 +135,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
 STATIC_URL = '/static/'
+# STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR,"static")
+]
 
 # 用户直接在网址上输入登录，传递不了next值，就会直接返回首页
 LOGOUT_REDIRECT_URL = '/'

@@ -17,13 +17,15 @@ from django.contrib import admin
 from django.urls import path, include
 from users import views
 
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', include('users.urls')),
     # django默认提供登录代码,默认登录界面是registration/login.html
     path('users/', include('django.contrib.auth.urls')),
     # 首页视图
-    path('', views.index, name='index')
+    path('', views.index, name='index'),
+    path('blog/', include('blog.urls'))
 
 
 ]

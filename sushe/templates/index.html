@@ -11,6 +11,7 @@
                 <p>你已登录，欢迎你：<a href="#">{{ user.username }}</a></p>
                 <button class="btn btn-default"><a href="{% url 'logout' %}?next={{ request.path }}">注销登录</a></button>
                 <button class="btn btn-default"><a href="{% url 'password_change' %}?next={{ request.path }}">修改密码</a></button>
+                <button class="btn btn-default"><a href="{% url 'blog:blog' %}?next={{ request.path }}">进入公告页面</a></button>
                 {% if is_perfect == 0 %}
                     <button class="btn btn-default"><a href="{% url 'users:perfectInfo' %}?next={{ request.path }}">完善个人信息</a></button>
                 {% elif is_perfect == 1 %}

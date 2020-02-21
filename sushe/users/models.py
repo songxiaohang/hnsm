@@ -72,7 +72,7 @@ class User(AbstractUser):
 class UserInfo(models.Model):
     # 用户信
     # 息与注册信息一对一
-    username = models.OneToOneField("User", on_delete=models.CASCADE, blank=True, null=True)
+    username = models.OneToOneField("User", verbose_name='用户名', on_delete=models.CASCADE, blank=True, null=True)
 
     # 用户电话
     phone = PhoneNumberField('手机号', blank=True, null=True)
@@ -81,15 +81,15 @@ class UserInfo(models.Model):
     gonghao = models.CharField('工号', max_length=31, blank=True, null=True)
 
     # 绑定上面的学校
-    school = models.ForeignKey(School, on_delete=models.CASCADE, blank=True, null=True)
+    school = models.ForeignKey(School, verbose_name='学校', on_delete=models.CASCADE, blank=True, null=True)
 
     # 绑定宿舍单元,models.CASCADE是指当删除宿舍这个数据库时，用户中关于这个数据库的信息也一并删除。
     # black=True表示该数据允许为空
-    unit = models.ForeignKey(Building, on_delete=models.CASCADE, blank=True, null=True)
+    unit = models.ForeignKey(Building, verbose_name='楼号', on_delete=models.CASCADE, blank=True, null=True)
 
-    floor = models.ForeignKey(Floor, on_delete=models.CASCADE, blank=True, null=True)
+    floor = models.ForeignKey(Floor, verbose_name='楼层', on_delete=models.CASCADE, blank=True, null=True)
 
-    room = models.ForeignKey(RoomNum, on_delete=models.CASCADE, blank=True, null=True)
+    room = models.ForeignKey(RoomNum, verbose_name='房间号', on_delete=models.CASCADE, blank=True, null=True)
 
     # 判断用户是否已完善信息
     is_perfect = models.IntegerField("信息是否完善", default=0)
