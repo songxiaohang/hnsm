@@ -2,6 +2,30 @@ from django.db import models
 from users.models import User
 from django.utils import timezone
 from django.urls import reverse
+import re
+from django.utils.functional import cached_property
+# 自动摘要
+import markdown
+# 用markdown解析属性
+from markdown.extensions.toc import TocExtension
+from django.utils.text import slugify
+
+from  django.utils.html import strip_tags
+
+
+def generate_rich_content(value):
+    md = markdown.Markdown(
+        extensions=[
+            "markdown.extensions.extra",
+            "markdown.extensions.codehilite",
+            # 记得在顶部引入 TocExtension 和 slugify
+            TocExtension(slugify=slugify),
+        ]
+    )
+    content = md.convert(value)
+    m = re.search(r'<div class="toc">\s*<ul>(.*)</ul>\s*</div>', md.toc, re.S)
+    toc = m.group(1) if m is not None else ""
+    return {"content": content, "toc": toc}
 
 
 class Category(models.Model):
@@ -80,12 +104,30 @@ class Post(models.Model):
     # Category 类似。
     author = models.ForeignKey(User, verbose_name='作者', on_delete=models.CASCADE)
 
+    # 新增 views 字段记录阅读量
+    # PositiveIntegerField类型的值只允许为0和正整数，editable=False为不允许后台编辑此字段
+    views = models.PositiveIntegerField(default=0, editable=False)
+
     class Meta:
         verbose_name = '文章'
         verbose_name_plural = verbose_name
+        ordering = ['-created_time']    # 指定文章的排序方式
 
     def save(self, *args, **kwargs):
         self.modified_time = timezone.now()
+
+        # 首先实例化一个 Markdown 类，用于渲染 body 的文本。
+        # 由于摘要并不需要生成文章目录，所以去掉了目录拓展。
+        md = markdown.Markdown(extensions=[
+            'markdown.extensions.extra',
+            'markdown.extensions.codehilite',
+        ])
+
+        # 先将 Markdown 文本渲染成 HTML 文本
+        # strip_tags 去掉 HTML 文本的全部 HTML 标签
+        # 从文本摘取前 54 个字符赋给 excerpt
+        self.excerpt = strip_tags(md.convert(self.body))[:54]
+
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -93,3 +135,25 @@ class Post(models.Model):
 
     def get_absolute_url(self):
         return reverse('blog:detail', kwargs={'pk': self.pk})
+
+    def increase_views(self):
+        self.views += 1
+        self.save(update_fields=['views'])
+
+    @cached_property
+    def rich_content(self):
+        return generate_rich_content(self.body)
+
+    @property
+    def toc(self):
+        return self.rich_content.get("toc", "")
+
+    @property
+    def body_html(self):
+        return self.rich_content.get("content", "")
+
+
+
+
+
+

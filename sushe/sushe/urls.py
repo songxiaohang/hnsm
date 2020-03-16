@@ -16,6 +16,8 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from users import views
+# RSS功能
+from blog.feeds import AllPostsRssFeed
 
 
 urlpatterns = [
@@ -25,7 +27,9 @@ urlpatterns = [
     path('users/', include('django.contrib.auth.urls')),
     # 首页视图
     path('', views.index, name='index'),
-    path('blog/', include('blog.urls'))
-
-
+    path('blog/', include('blog.urls')),
+    path('', include('comments.urls')),
+    path('all/rss/', AllPostsRssFeed(), name='rss'),
+    # django3 暂不支持 django-haystack搜索引擎
+    # path('search/', include('haystack.urls')),
 ]

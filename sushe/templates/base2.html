@@ -1,4 +1,5 @@
 {% load static %}
+{% load blog_extras %}
 
 <!DOCTYPE html>
 <html>
@@ -53,8 +54,23 @@
             padding-left: 10px;
             white-space: pre;
         }
+
+        /* 搜索关键词高亮 */
+        span.highlighted {
+          color: red;
+        }
     </style>
 </head>
+
+{% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} alert-dismissible" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                aria-hidden="true">&times;</span></button>
+        {{ message }}
+      </div>
+    {% endfor %}
+{% endif %}
 
 <body>
 <div class="container">
@@ -62,7 +78,7 @@
         <div class="row">
             <div class="col-md-4 col-sm-5 col-xs-8">
                 <div class="logo">
-                    <h1><a href="{% url 'blog:blog' %}"><b>公告</b></a></h1>
+                    <h1><a href="{% url 'blog:blog' %}"><b>公告页面</b></a></h1>
                 </div>
             </div><!-- col-md-4 -->
             <div class="col-md-8 col-sm-7 col-xs-4">
@@ -76,7 +92,7 @@
                     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                         <ul class="nav navbar-nav navbar-right">
                             <li class="cl-effect-11"><a href="{% url 'index' %}" data-hover="首页">首页</a></li>
-                            <li class="cl-effect-11"><a href="{% url 'blog:blog' %}" data-hover="公告">公告</a></li>
+                            <!--<li class="cl-effect-11"><a href="{% url 'blog:blog' %}" data-hover="公告">公告</a></li>-->
                             <li class="cl-effect-11"><a href="{% url 'blog:about' %}" data-hover="关于">关于</a></li>
                             <li class="cl-effect-11"><a href="{% url 'blog:context' %}" data-hover="联系">联系</a></li>
                         </ul>
@@ -85,10 +101,10 @@
                 <div id="header-search-box">
                     <a id="search-menu" href="#"><span id="search-icon" class="ion-ios-search-strong"></span></a>
                     <div id="search-form" class="search-form">
-                        <form role="search" method="get" id="searchform" action="#">
-                            <input type="search" placeholder="搜索" required>
-                            <button type="submit"><span class="ion-ios-search-strong"></span></button>
-                        </form>
+                        <form role="search" method="get" id="searchform" action="{% url 'blog:search' %}">
+  <input type="search" name="q" placeholder="搜索" required>
+  <button type="submit"><span class="ion-ios-search-strong"></span></button>
+</form>
                     </div>
                 </div>
             </div><!-- col-md-8 -->
@@ -108,6 +124,15 @@
             <aside class="col-md-4">
                 {% block toc %}
                 {% endblock toc %}
+
+                {% show_recent_posts %}
+                {% show_archives %}
+                {% show_categories %}
+                {% show_tags %}
+
+                <div class="rss">
+                    <a href="{% url 'rss' %}"><span class="ion-social-rss-outline"></span> RSS 订阅</a>
+                </div>
             </aside>
         </div>
     </div>

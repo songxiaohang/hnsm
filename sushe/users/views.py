@@ -71,7 +71,7 @@ def perfectInfo(request):
     return render(request, 'users/perfectInfo.html', context={'form': form, 'next': redirect_to})
 
 
-    return render(request, 'users/perfectInfo.html')
+    # return render(request, 'users/perfectInfo.html')
 
 
 def seeInfo(request):
